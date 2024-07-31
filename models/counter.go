@@ -1,12 +1,12 @@
 package models
 
 type Counter struct {
-	Id    int
+	Id    int64
 	Name  string
 	Value int
 }
 
-func CreateCounter(id, value int, name string) Counter {
+func CreateCounter(id int64, value int, name string) Counter {
 	return Counter{
 		Id:    id,
 		Value: value,
@@ -20,4 +20,16 @@ func (c *Counter) Add(n int) {
 
 func (c *Counter) Rest(n int) {
 	c.Value -= n
+}
+
+type CounterCreate struct {
+	Name  string
+	Value int
+}
+
+func CreateCounterBody(name string, value int) CounterCreate {
+	return CounterCreate{
+		Name:  name,
+		Value: value,
+	}
 }
