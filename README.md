@@ -1,6 +1,6 @@
 # Go couter
 
-Go counter is a small file based db for counters.
+Go counter is a small file based db for counters with TUI.
 
 ## Installation
 
