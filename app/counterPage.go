@@ -45,12 +45,15 @@ func (m *CounterAppModel) handleUpdateCounterPage(msg tea.Msg) (tea.Model, tea.C
 		case tea.KeyUp:
 			m.dbService.Update(m.selected.Id, m.selected.Name, m.selected.Value+1)
 			m.updateData()
+			go m.counterToSave()
 		case tea.KeyCtrlA:
 			m.dbService.Update(m.selected.Id, m.selected.Name, m.selected.Value+1)
 			m.updateData()
+			go m.counterToSave()
 		case tea.KeyDown:
 			m.dbService.Update(m.selected.Id, m.selected.Name, m.selected.Value-1)
 			m.updateData()
+			go m.counterToSave()
 		}
 		switch msg.String() {
 		case "q", "Q":
@@ -59,9 +62,11 @@ func (m *CounterAppModel) handleUpdateCounterPage(msg tea.Msg) (tea.Model, tea.C
 		case "k", "K":
 			m.dbService.Update(m.selected.Id, m.selected.Name, m.selected.Value-1)
 			m.updateData()
+			go m.counterToSave()
 		case "j", "J":
 			m.dbService.Update(m.selected.Id, m.selected.Name, m.selected.Value+1)
 			m.updateData()
+			go m.counterToSave()
 		}
 	}
 	return *m, nil

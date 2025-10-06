@@ -60,7 +60,7 @@ func (m *CounterAppModel) createCreateContentPage() string {
 	s += "Press Ctrl+c to go back without saving\r\n"
 	s += inputStyle.Width(20).Render("Name")
 	s += m.createInfo.inputs[nameInput].View()
-	s += fmt.Sprint("\r\n\r\n")
+	s += "\r\n\r\n"
 	s += inputStyle.Width(30).Render("Value")
 	s += m.createInfo.inputs[valueInput].View()
 	return s

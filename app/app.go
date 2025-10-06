@@ -1,9 +1,11 @@
 package app
 
 import (
-	"goCounter/db"
-	"goCounter/models"
+	"context"
+	"time"
 
+	"github.com/DNLSalazar/gocounter/db"
+	"github.com/DNLSalazar/gocounter/models"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -32,6 +34,24 @@ type CounterAppModel struct {
 	dbService     *db.DatabaseService
 	createInfo    createCounterInfo
 	helpPage      bool
+	ctx           *context.Context
+	cancel        *context.CancelFunc
+}
+
+func (m *CounterAppModel) saveData() {
+	cancel := *(m.cancel)
+	cancel()
+	m.dbService.SaveFile()
+}
+
+func (m *CounterAppModel) counterToSave() {
+	ctx := *(m.ctx)
+	select {
+	case <-ctx.Done():
+		return
+	case <-time.After(time.Second * 5):
+		m.dbService.SaveFile()
+	}
 }
 
 func CreateApp(db *db.DatabaseService) *tea.Program {
@@ -42,6 +62,8 @@ func CreateApp(db *db.DatabaseService) *tea.Program {
 	} else {
 		selected = nil
 	}
+
+	ctx, cancel := context.WithCancel(context.Background())
 
 	model := CounterAppModel{
 		data:      &data,
@@ -54,6 +76,8 @@ func CreateApp(db *db.DatabaseService) *tea.Program {
 			phase:  nameInput,
 			inputs: createInputs(),
 		},
+		ctx:    &ctx,
+		cancel: &cancel,
 	}
 
 	return tea.NewProgram(model)

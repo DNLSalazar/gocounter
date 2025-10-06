@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"goCounter/app"
-	"goCounter/db"
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/DNLSalazar/gocounter/app"
+	"github.com/DNLSalazar/gocounter/db"
 )
 
 func getExecPath() string {
@@ -19,9 +20,8 @@ func getExecPath() string {
 }
 
 func run() error {
-	// path := getExecPath()
-	// db := db.Init(path + "/gocounter/db.txt")
-	db := db.Init("./db.txt")
+	path := getExecPath()
+	db := db.Init(path + "/gocounterDb/db.txt")
 	counterApp := app.CreateApp(db)
 	if _, err := counterApp.Run(); err != nil {
 		return err

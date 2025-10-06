@@ -80,10 +80,10 @@ func TestSaveFile(t *testing.T) {
 		service.SaveFile()
 
 		file, err := os.Open(path)
-		defer file.Close()
 		if err != nil {
 			t.Error("Error saving file ", err)
 		}
+		defer file.Close()
 	})
 
 	t.Run("Reopen and save", func(t *testing.T) {

@@ -2,14 +2,16 @@ package db
 
 import (
 	"fmt"
-	"goCounter/models"
 	"io/fs"
 	"log"
 	"os"
+	"path/filepath"
 	"slices"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/DNLSalazar/gocounter/models"
 )
 
 type DatabaseService struct {
@@ -20,7 +22,7 @@ type DatabaseService struct {
 
 func Init(path string) *DatabaseService {
 	service := &DatabaseService{
-		path: path,
+		path:      path,
 		separator: "\r\n",
 	}
 	service.getData()
@@ -57,16 +59,35 @@ func parseContent(str []string) []models.Counter {
 	return counters
 }
 
+func (d *DatabaseService) createFile() {
+	dir := filepath.Dir(d.path)
+	if dir != "" {
+		err := os.MkdirAll(dir, 0755)
+		if err != nil {
+			fmt.Println("Error creating directories for db", err)
+			panic(err)
+		}
+	}
+
+	fileName := filepath.Base(d.path)
+
+	if fileName == "" {
+		panic("Invalid file name for db")
+	}
+
+	file, err := os.Create(d.path)
+	if err != nil {
+		log.Fatal("Error creating file ", err, d.path)
+	}
+	defer file.Close()
+}
+
 func (d *DatabaseService) readFile() []models.Counter {
 	content, err := os.ReadFile(d.path)
 	if err != nil {
 		switch err.(type) {
 		case *fs.PathError:
-			file, err := os.Create(d.path)
-			defer file.Close()
-			if err != nil {
-				log.Fatal("Error creating file ", err, d.path)
-			}
+			d.createFile()
 			return []models.Counter{}
 		}
 		log.Fatal("Error reading db file ", err)
@@ -106,11 +127,11 @@ func (d *DatabaseService) SaveFile() {
 	}
 
 	file, err := os.Create(d.path)
-	defer file.Close()
 	if err != nil {
 		log.Printf("Trying to open file %v counters\r\n", len(*d.data))
 		log.Fatal("Error opening file for writing file", err)
 	}
+	defer file.Close()
 
 	_, err = file.Write(data)
 	if err != nil {

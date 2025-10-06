@@ -9,7 +9,7 @@ import (
 func (m *CounterAppModel) createDeletePage() string {
 	s := ""
 	s += fmt.Sprintf("Are you sure you want to delete counter %v?\r\n", m.selected.Name)
-	s += fmt.Sprintf("Press Y[Yes] / N[No]")
+	s += "Press Y[Yes] / N[No]"
 	return s
 }
 

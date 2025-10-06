@@ -18,7 +18,7 @@ func (m *CounterAppModel) createSelectPage() string {
 }
 
 func (m *CounterAppModel) createSelectContentPage() string {
-	s := fmt.Sprint("Press Ctrl+h for toggle help or q to go back/quit\r\n")
+	s := "Press Ctrl+h for toggle help or q to go back/quit\r\n"
 	for _, v := range *m.data {
 		space := listSpace
 		if m.selected.Id == v.Id {

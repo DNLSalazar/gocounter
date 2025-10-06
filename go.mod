@@ -1,4 +1,4 @@
-module goCounter
+module github.com/DNLSalazar/gocounter
 
 go 1.22.0
 
